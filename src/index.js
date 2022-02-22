@@ -1,7 +1,7 @@
-import {init, animate, createBoxArray} from "./rubiks.js"
+import {init, animate} from "./rubiks.js"
 
 
 init();
-createBoxArray();
 animate();
+
 
