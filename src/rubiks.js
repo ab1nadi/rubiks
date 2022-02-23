@@ -9,7 +9,11 @@ let boxStorage;
 
 let groupEverything = new THREE.Group();
 
-let k = new Rubiks(0,0,0,3);
+let pivot = new THREE.Group();
+
+let k = new Rubiks(6,6,6,3);
+
+window.rotateTop =()=> k.rotateTop();
 export function init() {
 
 	camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.01, 1000 );
@@ -21,9 +25,10 @@ export function init() {
 	scene.add( light );
 
 
+	
 
 	k.init(groupEverything);
-	
+
 	scene.add(groupEverything)
 
 	renderer = new THREE.WebGLRenderer( { antialias: true } );
@@ -36,9 +41,6 @@ export function init() {
 export function animate()
 {
 		requestAnimationFrame( animate );
-		groupEverything.rotation.x+=0.02;
-		groupEverything.rotation.y+=0.02;
-		k.rotateTop();
 		renderer.render( scene, camera );
 }
 
