@@ -13,8 +13,7 @@ let pivot = new THREE.Group();
 
 let k = new Rubiks(0,0,0,3);
 
-window.rotateTop =()=> k.rotateTop();
-window.rotateBottom=()=> k.rotateBottom();
+window.k = k;
 export function init() {
 
 	console.log(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0).normalize(), Math.PI/2))

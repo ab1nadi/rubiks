@@ -1,6 +1,6 @@
 import  * as THREE  from 'three';
 import { Group } from 'three.js';
-import {rotateTop, rotateBottom as rB} from './rotating3dArray'
+import {rotateTop, rotateBottom as rB, rotateLeft as rL} from './rotating3dArray'
 
 export default class Rubiks 
 {
@@ -34,10 +34,10 @@ export default class Rubiks
 
 		// animation stuff
 		this.animation = "";
+		this.clockwise = true; // true is clockwise, false is opposite
 		this.animationMaxSteps = 60; //hypothetically this means our animations will take 1 second
 		this.animationStep = 0; // this will update every frame;
 		this.animationStepAmount = Math.PI/2/this.animationMaxSteps; // the amount to step everyframe
-		
 	}
 
 	// ADDS IT TO THE SCENE
@@ -147,46 +147,66 @@ export default class Rubiks
 	// frame 
 	update()
 	{
-		if(this.animation==="topP")
+		if(this.animation==="y")
 		{
 			// animating
 			if(this.animationStep < this.animationMaxSteps)
 			{
+				if(clockwise)
 					this.tempHolder.rotation.y+=this.animationStepAmount;
+				else 
+					this.tempHolder.rotation.y-=this.animationStepAmount;
+
 					this.animationStep++;
 			}
 			// done animating
 			else 
-			{
-				this.animation="";
-				this.animationStep = 0;
 				this.animationDone();
-			}
+		
 		}
-		else if(this.animation==="bottomP")
+		else if(this.animation==="x")
 		{
 			// animating
 			if(this.animationStep < this.animationMaxSteps)
 			{
-					this.tempHolder.rotation.y+=this.animationStepAmount;
+				if(clockwise)
+					this.tempHolder.rotation.x+=this.animationStepAmount;
+				else
+					this.tempHolder.rotation.x-=this.animationStepAmount;
+
 					this.animationStep++;
 			}
 			// done animating
 			else 
-			{
-				this.animation="";
-				this.animationStep = 0;
-				this.animationDone();
-			}
+				this.animationDone();	
 		}
+
+		else if(this.animation==="z")
+		{
+			// animating
+			if(this.animationStep < this.animationMaxSteps)
+			{
+				if(clockwise)
+					this.tempHolder.rotation.z+=this.animationStepAmount;
+				else
+					this.tempHolder.rotation.z-=this.animationStepAmount;
+
+					this.animationStep++;
+			}
+			// done animating
+			else 
+				this.animationDone();	
+		}
+		
 	}
 
 
-	rotateTop()
+	rotateTop(clockwise)
 	{
 			// means that we can animate 
 			if(this.animation == "")
 			{
+				this.clockwise = clockwise;
 				for(let z = 0; z<3; z++)
 					for(let x = 0; x<3; x++)
 						this.tempHolder.attach(this.everything[0][z][x]);
@@ -194,41 +214,119 @@ export default class Rubiks
 				// rotate the everything holder
 				rotateTop(this.everything);
 
-				this.animation="topP";; // this will start the animation in the update loop
+				this.animation="y";; // this will start the animation in the update loop
 
 			}
 	}
 
-	rotateBottom()
+	rotateBottom(clockwise)
 	{
-					// means that we can animate 
-					if(this.animation == "")
-					{
-						for(let z = 0; z<3; z++)
-							for(let x = 0; x<3; x++)
-								this.tempHolder.attach(this.everything[2][z][x]);
-						
-						// rotate the everything holder
-						rB(this.everything);
-		
-						this.animation="bottomP";; // this will start the animation in the update loop
-		
-					}
+
+		// means that we can animate 
+		if(this.animation == "")
+		{
+			this.clockwise = clockwise;
+			for(let z = 0; z<3; z++)
+				for(let x = 0; x<3; x++)
+					this.tempHolder.attach(this.everything[2][z][x]);
+			
+			// rotate the everything holder
+			rB(this.everything);
+
+			this.animation="y";; // this will start the animation in the update loop
+
+		}
+	}
+
+	rotateLeft(clockwise)
+	{
+		// means that we can animate 
+		if(this.animation == "")
+		{
+			this.clockwise = clockwise
+			for(let y = 0; y<this.col; y++)
+				for(let z = 0; z<this.col; z++)
+					this.tempHolder.attach(this.everything[y][z][0]);
+			
+			// rotate the everything holder
+			rL(this.everything);
+
+			this.animation="x";; // this will start the animation in the update loop
+
+		}
+	}
+
+	rotateRight(clockwise)
+	{    
+		// means that we can animate 
+		if(this.animation == "")
+		{
+			this.clockwise = clockwise
+			for(let y = 0; y<this.col; y++)
+				for(let z = 0; z<this.col; z++)
+					this.tempHolder.attach(this.everything[y][z][this.col-1]);
+			
+			// rotate the everything holder
+			rL(this.everything);
+
+			this.animation="x";; // this will start the animation in the update loop
+
+		}
+	}
+
+
+	rotateBack(clockwise)
+	{    
+		// means that we can animate 
+		if(this.animation == "")
+		{
+			this.clockwise = clockwise
+			for(let y = 0; y<this.col; y++)
+				for(let x = 0; x<this.col; x++)
+					this.tempHolder.attach(this.everything[y][0][x]);
+			
+			// rotate the everything holder
+			rL(this.everything);
+
+			this.animation="z";; // this will start the animation in the update loop
+
+		}
+	}
+
+	rotateBack(clockwise)
+	{    
+		// means that we can animate 
+		if(this.animation == "")
+		{
+			this.clockwise = clockwise
+			for(let y = 0; y<this.col; y++)
+				for(let x = 0; x<this.col; x++)
+					this.tempHolder.attach(this.everything[y][this.col-1][x]);
+			
+			// rotate the everything holder
+			rL(this.everything);
+
+			this.animation="z";; // this will start the animation in the update loop
+
+		}
 	}
 
 	animationDone()
 	{
-			// save the current position data 
-			// so moving them into the holder doesnt 
-			// screw them up 
-			let chil = [...this.tempHolder.children]
-			for(let i = 0; i<chil.length; i++)
-			{
-				let current = chil[i];
-				this.holder.attach(current);
-				this.tempHolder.remove(current);
-			}
-			
+		this.animation="";
+		this.animationStep = 0;
+
+		// save the current position data 
+		// so moving them into the holder doesnt 
+		// screw them up 
+		let chil = [...this.tempHolder.children]
+		for(let i = 0; i<chil.length; i++)
+		{
+			let current = chil[i];
+			this.holder.attach(current);
+			this.tempHolder.remove(current);
+		}
+		
 
 	}
 
