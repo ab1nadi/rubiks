@@ -1,6 +1,6 @@
 import  * as THREE  from 'three';
 import { Group } from 'three.js';
-
+import {rotateTop, rotateBottom as rB} from './rotating3dArray'
 
 export default class Rubiks 
 {
@@ -14,45 +14,39 @@ export default class Rubiks
 		this.size = 4;
 
 		
-		this.animationSteps = 100;
 
-		// generate the x,y,z
-		// vectors for rotating around
-		// the axis
-
-		this.top = [];
-		this.left = [];
-		this.right = [];
-		this.front = [];
-		this.back = [];
-		this.bottom = [];
+		// so we have a place to store this stuff
+		this.everything = [[[0,0,0], [0,0,0], [0,0,0]], [[0,0,0], [0,0,0], [0,0,0]], [[0,0,0], [0,0,0], [0,0,0]]]
 		
 		this.scene = null;
 
 
-		this.rotation=null;
+		this.holder = new THREE.Group();
+		this.tempHolder = new THREE.Group();
+		this.holder.add(this.tempHolder);
 
-		this.holder = null;
 
-		this.tempHolder = null;
+
 
 		this.localx;
 		this.localy;
 		this.localz;
-	
+
+		// animation stuff
+		this.animation = "";
+		this.animationMaxSteps = 60; //hypothetically this means our animations will take 1 second
+		this.animationStep = 0; // this will update every frame;
+		this.animationStepAmount = Math.PI/2/this.animationMaxSteps; // the amount to step everyframe
+		
 	}
 
 	// ADDS IT TO THE SCENE
 	init(scene)
 	{
-		this.holder = new THREE.Group();
-
-		this.holder.position.x = this.x;
-		this.holder.position.y = this.y;
-		this.holder.position.z = this.z;
 
 
 		this.scene = scene;
+		
 
 
 		this.localx = -1* ((this.col-1)*this.gap + (this.col-1)*this.size)/2;
@@ -64,7 +58,7 @@ export default class Rubiks
 
 
 
-		scene.add(this.holder)
+	
 
 			for(let x = 0; x<this.col; x++)
 			{
@@ -77,24 +71,11 @@ export default class Rubiks
 						let z_ = this.localz+(this.size*z)+(this.gap*z);
 						let cube = this.createCube(x_,y_,z_,this.size);
 
-						console.log(cube.position)
-
 						this.holder.add(cube);
+						scene.add(this.holder);
 
 
-						
-						if(x==0)
-						this.left.push(cube);
-					if(x==this.col-1)
-						this.right.push(cube);
-					if(y==0)
-						this.top.push(cube);
-					if(y==this.col-1)
-						this.bottom.push(cube);
-					if(z==0)
-						this.front.push(cube);
-					 if(z==this.col-1)
-						this.back.push(cube);
+						this.everything[y][z][x] = cube;
 
            
 					}
@@ -124,7 +105,7 @@ export default class Rubiks
 			let six = new THREE.PlaneGeometry( size,size);
 			let msix = new THREE.MeshBasicMaterial( {color: 0xffff00, side: THREE.DoubleSide} );
 		
-			// create the meshes from the materials and gemoetries
+			// create the meshes from the materials and gemoetriesv  
 			//////////////////////////////////////////////////////////
 			let mesh1 = new THREE.Mesh( one, mone );     // front
 			let mesh2 = new THREE.Mesh( two, mtwo );     // left
@@ -162,38 +143,98 @@ export default class Rubiks
 		
 	}
 
-
-	rotateTop(multiplier)
+	// this function gets called every
+	// frame 
+	update()
 	{
-			// stuff to be initilized for
-			// the rotation
-			if(this.tempHolder == null)
+		if(this.animation==="topP")
+		{
+			// animating
+			if(this.animationStep < this.animationMaxSteps)
 			{
-				this.tempHolder = new THREE.Group();
-
-				for(let i = 0; i<this.top.length; i++)
-					this.tempHolder.add(this.top[i]);
-				this.holder.add(this.tempHolder);
+					this.tempHolder.rotation.y+=this.animationStepAmount;
+					this.animationStep++;
 			}
+			// done animating
+			else 
+			{
+				this.animation="";
+				this.animationStep = 0;
+				this.animationDone();
+			}
+		}
+		else if(this.animation==="bottomP")
+		{
+			// animating
+			if(this.animationStep < this.animationMaxSteps)
+			{
+					this.tempHolder.rotation.y+=this.animationStepAmount;
+					this.animationStep++;
+			}
+			// done animating
+			else 
+			{
+				this.animation="";
+				this.animationStep = 0;
+				this.animationDone();
+			}
+		}
+	}
+
+
+	rotateTop()
+	{
+			// means that we can animate 
+			if(this.animation == "")
+			{
+				for(let z = 0; z<3; z++)
+					for(let x = 0; x<3; x++)
+						this.tempHolder.attach(this.everything[0][z][x]);
+				
+				// rotate the everything holder
+				rotateTop(this.everything);
+
+				this.animation="topP";; // this will start the animation in the update loop
+
+			}
+	}
+
+	rotateBottom()
+	{
+					// means that we can animate 
+					if(this.animation == "")
+					{
+						for(let z = 0; z<3; z++)
+							for(let x = 0; x<3; x++)
+								this.tempHolder.attach(this.everything[2][z][x]);
+						
+						// rotate the everything holder
+						rB(this.everything);
 		
-			let times = [0, 1];
-			let values = [0, 1 * Math.PI/2];
+						this.animation="bottomP";; // this will start the animation in the update loop
+		
+					}
+	}
 
+	animationDone()
+	{
+			// save the current position data 
+			// so moving them into the holder doesnt 
+			// screw them up 
+			let chil = [...this.tempHolder.children]
+			for(let i = 0; i<chil.length; i++)
+			{
+				let current = chil[i];
+				this.holder.attach(current);
+				this.tempHolder.remove(current);
+			}
 			
-			let rotationKeyFrame = new THREE.NumberKeyframeTrack('.rotationy', times, values);
 
-
-			let rotateClip = new THREE.AnimationClip('.rotation', -1, [
-				rotationKeyFrame
-			  ]);
-
-			let mixer = new THREE.AnimationMixer(this.tempHolder);
-
-			let action = mixer.clipAction(rotateClip);
-
-
-			action.play();
 	}
 
 
 }
+
+
+
+

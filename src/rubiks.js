@@ -11,10 +11,13 @@ let groupEverything = new THREE.Group();
 
 let pivot = new THREE.Group();
 
-let k = new Rubiks(6,6,6,3);
+let k = new Rubiks(0,0,0,3);
 
 window.rotateTop =()=> k.rotateTop();
+window.rotateBottom=()=> k.rotateBottom();
 export function init() {
+
+	console.log(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0).normalize(), Math.PI/2))
 
 	camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.01, 1000 );
 	camera.position.z = 30;
@@ -41,6 +44,8 @@ export function init() {
 export function animate()
 {
 		requestAnimationFrame( animate );
+		k.update();
+		groupEverything.rotation.x+=0.01;
 		renderer.render( scene, camera );
 }
 
