@@ -46,6 +46,7 @@ export function animate()
 		k.update();
 		groupEverything.rotation.x +=0.01;
 		groupEverything.rotation.y +=0.01;
+		groupEverything.rotation.z -=0.005;
 		renderer.render( scene, camera );
 }
 
