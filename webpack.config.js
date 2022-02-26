@@ -15,4 +15,18 @@ module.exports = {
     compress: true,
     port: 9000,
   },
+
+    module: {
+      rules: [
+        {
+          test: /\.(png|jpe?g|gif)$/i,
+          use: [
+            {
+              loader: 'file-loader',
+            },
+          ],
+        },
+      ],
+    },
+  
 };

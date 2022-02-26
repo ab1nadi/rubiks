@@ -167,7 +167,6 @@ export function rotateBack(array,clockwise)
             let negX = (x-array.length-1);
             negX = negX?-1*(negX+2):negX;
 
-            console.log(negY)
                 if(clockwise)
                 array[y][0][x] = arrayCopy[negX][0][y]; 
                 else 

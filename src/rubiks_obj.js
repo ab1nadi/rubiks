@@ -1,18 +1,33 @@
 import  * as THREE  from 'three';
-import { TetrahedronGeometry } from 'three';
-import { Group } from 'three.js';
+
 import {rotateTop, rotateBottom as rB, rotateLeft as rL, rotateRight as rR, rotateBack as rBack, rotateFront as rF} from './rotating3dArray'
 
+import black from './assets/black.png'
+import white from './assets/white.png'
+import yellow from './assets/yellow.png'
+import green from './assets/green.png'
+import orange from './assets/orange.png'
+import blue from './assets/blue.png'
+import red from './assets/red.png'
+
+
+const blackT = new THREE.TextureLoader().load( black );
+const whiteT = new THREE.TextureLoader().load( white );
+const yellowT = new THREE.TextureLoader().load( yellow );
+const greenT = new THREE.TextureLoader().load( green );
+const orangeT = new THREE.TextureLoader().load( orange );
+const blueT = new THREE.TextureLoader().load( blue );
+const redT = new THREE.TextureLoader().load( yellow );
 export default class Rubiks 
 {
-	constructor(x,y,z,col)
+	constructor(x,y,z,col,animationLength)
 	{
 		this.x = x;
 		this.y = y;
 		this.z = z;
 		this.col = col;
 		this.gap = 0.02;
-		this.size = 4;
+		this.size = 2;
 
 		
 
@@ -38,7 +53,7 @@ export default class Rubiks
 		// animation stuff
 		this.animation = "";
 		this.clockwise = true; // true is clockwise, false is opposite
-		this.animationMaxSteps = 60; //hypothetically this means our animations will take 1 second
+		this.animationMaxSteps = animationLength; //hypothetically this means our animations will take 1 second
 		this.animationStep = 0; // this will update every frame;
 		this.animationStepAmount = Math.PI/2/this.animationMaxSteps; // the amount to step everyframe
 		this.animationQueue = [];  // allows animation functions to be called relatively fast
@@ -72,7 +87,29 @@ export default class Rubiks
 						let x_ = this.localx+(this.size*x)+(this.gap*x);
 						let y_ = this.localy-(this.size*y)-(this.gap*y);
 						let z_ = this.localz+(this.size*z)+(this.gap*z);
-						let cube = this.createCube(x_,y_,z_,this.size);
+
+						// figure out what colors should be exposed
+						let expossure = {right:false,left:false,front:false,back:false,top:false,bottom:false};
+
+						if(x==0)
+							expossure.right = true;
+						else if(x==this.col-1)
+							expossure.left = true;
+
+						if(z==0)
+							expossure.front = true;
+						else if(z==this.col-1)
+							expossure.back = true;
+
+						if(y==0)
+							expossure.top=true;
+						else if(y==this.col-1)
+							expossure.bottom=true;
+
+
+
+
+						let cube = this.createCube(x_,y_,z_,this.size,expossure);
 						this.holder.add(cube);
 						scene.add(this.holder);
 
@@ -98,24 +135,47 @@ export default class Rubiks
 
 	// creates one cube with the correct 
 	// colors
-	createCube(x,y,z,size){
+	createCube(x,y,z,size,expossure){
+
+
+			// where we figure out the colors:
+			let front = blackT;
+			let left = blackT;
+			let right = blackT;
+			let back = blackT;
+			let top = blackT;
+			let bottom = blackT;
+
+			if(expossure.front)
+				front = greenT;
+			if(expossure.left)
+				left = blueT;
+			if(expossure.right)
+				right = orangeT
+			if(expossure.back)
+				back = greenT;
+			if(expossure.top)
+				top = whiteT;
+			if(expossure.bottom)
+				bottom= yellowT;
 		
 			// 4 planes for 1 group
 			let group = new THREE.Group();
 		
 			// create all the materials and geometries
 			let one = new THREE.PlaneGeometry( size,size, );
-			let mone = new THREE.MeshBasicMaterial( {color: 0x00f704, side: THREE.DoubleSide} );
+			let mone = new THREE.MeshBasicMaterial( {map: front, side: THREE.DoubleSide} ); // front
 			let two = new THREE.PlaneGeometry( size,size);
-			let mtwo = new THREE.MeshBasicMaterial( {color:0x0008f7, side: THREE.DoubleSide} );
+			let mtwo = new THREE.MeshBasicMaterial( {map: left, side: THREE.DoubleSide} ); // left
 			let three = new THREE.PlaneGeometry( size,size);
-			let mthree = new THREE.MeshBasicMaterial( {color: 0xf76700, side: THREE.DoubleSide} );
+			let mthree = new THREE.MeshBasicMaterial( {map: right, side: THREE.DoubleSide} ); // right
 			let four = new THREE.PlaneGeometry( size,size);
-			let mfour = new THREE.MeshBasicMaterial( {color: 0xff0000, side: THREE.DoubleSide} );
+			let mfour = new THREE.MeshBasicMaterial( {map: back, side: THREE.DoubleSide} ); // back
 			let five = new THREE.PlaneGeometry( size,size);
-			let mfive = new THREE.MeshBasicMaterial( {color:0xFFFFFF, side: THREE.DoubleSide} );
+			let mfive = new THREE.MeshBasicMaterial( {map: top, side: THREE.DoubleSide} );  // top
 			let six = new THREE.PlaneGeometry( size,size);
-			let msix = new THREE.MeshBasicMaterial( {color: 0xffff00, side: THREE.DoubleSide} );
+
+			let msix = new THREE.MeshBasicMaterial( {map: bottom, side: THREE.DoubleSide} );	// bottom
 		
 			// create the meshes from the materials and gemoetriesv  
 			//////////////////////////////////////////////////////////
