@@ -79,7 +79,7 @@ export function rotateBottom(array,clockwise)
 // similar to previous functions
 export function rotateLeft(array,clockwise)
 {
-    let arrayCopy = JSON.parse(JSON.stringify(array));
+    let arrayCopy = arrayShallowCopy(array)
 
     for(let y = 0; y<array.length ;y++)
     {
@@ -105,7 +105,7 @@ export function rotateLeft(array,clockwise)
 // similar to previous functions
 export function rotateRight(array,clockwise)
 {
-    let arrayCopy = JSON.parse(JSON.stringify(array));
+    let arrayCopy = arrayShallowCopy(array)
 
     for(let y = 0; y<array.length ;y++)
     {

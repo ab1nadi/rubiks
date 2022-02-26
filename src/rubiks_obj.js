@@ -1,6 +1,7 @@
 import  * as THREE  from 'three';
+import { TetrahedronGeometry } from 'three';
 import { Group } from 'three.js';
-import {rotateTop, rotateBottom as rB, rotateLeft as rL} from './rotating3dArray'
+import {rotateTop, rotateBottom as rB, rotateLeft as rL, rotateRight as rR, rotateBack as rBack, rotateFront as rF} from './rotating3dArray'
 
 export default class Rubiks 
 {
@@ -23,6 +24,8 @@ export default class Rubiks
 
 		this.holder = new THREE.Group();
 		this.tempHolder = new THREE.Group();
+		this.tempHolder.name ="tempHolder";
+		
 		this.holder.add(this.tempHolder);
 
 
@@ -38,6 +41,7 @@ export default class Rubiks
 		this.animationMaxSteps = 60; //hypothetically this means our animations will take 1 second
 		this.animationStep = 0; // this will update every frame;
 		this.animationStepAmount = Math.PI/2/this.animationMaxSteps; // the amount to step everyframe
+		this.animationQueue = [];  // allows animation functions to be called relatively fast
 	}
 
 	// ADDS IT TO THE SCENE
@@ -48,40 +52,48 @@ export default class Rubiks
 		this.scene = scene;
 		
 
-
-		this.localx = -1* ((this.col-1)*this.gap + (this.col-1)*this.size)/2;
-		this.localz = -1 * ((this.col-1)*this.gap + (this.col-1)*this.size)/2  -this.size/2;
-		this.localy = (this.col-1)*this.gap/2 + (this.col-1)*this.size/2 + this.size/2;;
-
-		console.log(this.localx,this.localz,this.localy)
+		this.localx = -1*((this.col-1)*this.gap + this.col*this.size)/2 + this.size/2;
+		this.localz = -1*((this.col-1)*this.gap + (this.col)*this.size)/2 
+		this.localy = (this.col-1)*this.gap/2 + (this.col)*this.size/2 -this.size/2;
 
 
 
 
+
+			let id = 0;
 	
 
-			for(let x = 0; x<this.col; x++)
+			for(let y = 0; y<this.col; y++)
 			{
-				for(let y = 0; y<this.col; y++)
+				for(let z = 0; z<this.col; z++)
 				{
-					for(let z = 0; z<this.col; z++)
+					for(let x = 0; x<this.col; x++)
 					{
 						let x_ = this.localx+(this.size*x)+(this.gap*x);
 						let y_ = this.localy-(this.size*y)-(this.gap*y);
 						let z_ = this.localz+(this.size*z)+(this.gap*z);
 						let cube = this.createCube(x_,y_,z_,this.size);
-
 						this.holder.add(cube);
 						scene.add(this.holder);
 
 
-						this.everything[y][z][x] = cube;
+						this.everything[y][z][x] = {obj: cube, id: id++};
 
            
 					}
 				}
 			}
-
+		
+			// setup the infinite loop that will check if the animation stack
+			// has an animation we want to run 
+			setInterval(()=>{
+				// lets do this forever pretty much
+				if(this.animation=="" && this.animationQueue.length>0)
+				{
+					let f = this.animationQueue.shift(); // pop it off the back
+					f(); // call the animation function
+				}
+			},0)
 	}
 
 	// creates one cube with the correct 
@@ -152,7 +164,7 @@ export default class Rubiks
 			// animating
 			if(this.animationStep < this.animationMaxSteps)
 			{
-				if(clockwise)
+				if(!this.clockwise)
 					this.tempHolder.rotation.y+=this.animationStepAmount;
 				else 
 					this.tempHolder.rotation.y-=this.animationStepAmount;
@@ -169,7 +181,7 @@ export default class Rubiks
 			// animating
 			if(this.animationStep < this.animationMaxSteps)
 			{
-				if(clockwise)
+				if(this.clockwise)
 					this.tempHolder.rotation.x+=this.animationStepAmount;
 				else
 					this.tempHolder.rotation.x-=this.animationStepAmount;
@@ -186,7 +198,7 @@ export default class Rubiks
 			// animating
 			if(this.animationStep < this.animationMaxSteps)
 			{
-				if(clockwise)
+				if(!this.clockwise)
 					this.tempHolder.rotation.z+=this.animationStepAmount;
 				else
 					this.tempHolder.rotation.z-=this.animationStepAmount;
@@ -209,13 +221,17 @@ export default class Rubiks
 				this.clockwise = clockwise;
 				for(let z = 0; z<3; z++)
 					for(let x = 0; x<3; x++)
-						this.tempHolder.attach(this.everything[0][z][x]);
+						this.tempHolder.attach(this.everything[0][z][x].obj);
 				
 				// rotate the everything holder
-				rotateTop(this.everything);
+				rotateTop(this.everything, clockwise);
 
 				this.animation="y";; // this will start the animation in the update loop
 
+			}
+			else 
+			{
+				this.animationQueue.push(()=>this.rotateTop(clockwise))
 			}
 	}
 
@@ -228,14 +244,18 @@ export default class Rubiks
 			this.clockwise = clockwise;
 			for(let z = 0; z<3; z++)
 				for(let x = 0; x<3; x++)
-					this.tempHolder.attach(this.everything[2][z][x]);
+					this.tempHolder.attach(this.everything[2][z][x].obj);
 			
 			// rotate the everything holder
-			rB(this.everything);
+			rB(this.everything, clockwise);
 
 			this.animation="y";; // this will start the animation in the update loop
 
 		}
+		else 
+			{
+				this.animationQueue.push(()=>this.rotateBottom(clockwise))
+			}
 	}
 
 	rotateLeft(clockwise)
@@ -246,32 +266,47 @@ export default class Rubiks
 			this.clockwise = clockwise
 			for(let y = 0; y<this.col; y++)
 				for(let z = 0; z<this.col; z++)
-					this.tempHolder.attach(this.everything[y][z][0]);
+				     this.tempHolder.attach(this.everything[y][z][0].obj);
+			
 			
 			// rotate the everything holder
-			rL(this.everything);
+			rL(this.everything, clockwise);
 
 			this.animation="x";; // this will start the animation in the update loop
 
 		}
+		else 
+			{
+				this.animationQueue.push(()=>this.rotateLeft(clockwise))
+			}
 	}
 
 	rotateRight(clockwise)
 	{    
+	
+
 		// means that we can animate 
 		if(this.animation == "")
 		{
-			this.clockwise = clockwise
+		
+			this.clockwise = !clockwise
 			for(let y = 0; y<this.col; y++)
 				for(let z = 0; z<this.col; z++)
-					this.tempHolder.attach(this.everything[y][z][this.col-1]);
+					{
+						this.tempHolder.attach(this.everything[y][z][this.col-1].obj);
+					}
 			
 			// rotate the everything holder
-			rL(this.everything);
+			rR(this.everything, !clockwise);
+
 
 			this.animation="x";; // this will start the animation in the update loop
 
 		}
+		else 
+			{
+				this.animationQueue.push(()=>this.rotateRight(clockwise))
+			}
 	}
 
 
@@ -283,17 +318,21 @@ export default class Rubiks
 			this.clockwise = clockwise
 			for(let y = 0; y<this.col; y++)
 				for(let x = 0; x<this.col; x++)
-					this.tempHolder.attach(this.everything[y][0][x]);
+					this.tempHolder.attach(this.everything[y][0][x].obj);
 			
 			// rotate the everything holder
-			rL(this.everything);
+			rBack(this.everything, clockwise);
 
 			this.animation="z";; // this will start the animation in the update loop
 
 		}
+		else 
+			{
+				this.animationQueue.push(()=>this.rotateBack(clockwise))
+			}
 	}
 
-	rotateBack(clockwise)
+	rotateFront(clockwise)
 	{    
 		// means that we can animate 
 		if(this.animation == "")
@@ -301,14 +340,18 @@ export default class Rubiks
 			this.clockwise = clockwise
 			for(let y = 0; y<this.col; y++)
 				for(let x = 0; x<this.col; x++)
-					this.tempHolder.attach(this.everything[y][this.col-1][x]);
+					this.tempHolder.attach(this.everything[y][this.col-1][x].obj);
 			
 			// rotate the everything holder
-			rL(this.everything);
+			rF(this.everything, clockwise);
 
 			this.animation="z";; // this will start the animation in the update loop
 
 		}
+		else 
+			{
+				this.animationQueue.push(()=>this.rotateFront(clockwise))
+			}
 	}
 
 	animationDone()
@@ -319,15 +362,45 @@ export default class Rubiks
 		// save the current position data 
 		// so moving them into the holder doesnt 
 		// screw them up 
+
 		let chil = [...this.tempHolder.children]
 		for(let i = 0; i<chil.length; i++)
-		{
+		{	
 			let current = chil[i];
 			this.holder.attach(current);
 			this.tempHolder.remove(current);
 		}
-		
 
+
+		this.holder.remove(this.tempHolder);
+		this.tempHolder = new THREE.Group();
+
+		this.holder.add(this.tempHolder);
+
+	}
+
+
+	printEverything()
+	{
+		console.log("[")
+		for(let y=0; y<this.col; y++)
+		{	
+			console.log("[")
+			for(let z=0; z<this.col; z++)
+			{
+
+				let printed = "[";
+				for(let x=0; x<this.col; x++)
+				{
+						printed += this.everything[y][z][x].id+", ";
+				}
+
+				console.log(printed + "],");
+
+			}
+			console.log("],")
+		}
+		console.log("]")
 	}
 
 
