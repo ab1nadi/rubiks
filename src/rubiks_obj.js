@@ -164,18 +164,18 @@ export default class Rubiks
 		
 			// create all the materials and geometries
 			let one = new THREE.PlaneGeometry( size,size, );
-			let mone = new THREE.MeshBasicMaterial( {map: front, side: THREE.DoubleSide} ); // front
+			let mone = new THREE.MeshStandardMaterial( {map: front, side: THREE.DoubleSide} ); // front
 			let two = new THREE.PlaneGeometry( size,size);
-			let mtwo = new THREE.MeshBasicMaterial( {map: left, side: THREE.DoubleSide} ); // left
+			let mtwo = new THREE.MeshStandardMaterial( {map: left, side: THREE.DoubleSide} ); // left
 			let three = new THREE.PlaneGeometry( size,size);
-			let mthree = new THREE.MeshBasicMaterial( {map: right, side: THREE.DoubleSide} ); // right
+			let mthree = new THREE.MeshStandardMaterial( {map: right, side: THREE.DoubleSide} ); // right
 			let four = new THREE.PlaneGeometry( size,size);
-			let mfour = new THREE.MeshBasicMaterial( {map: back, side: THREE.DoubleSide} ); // back
+			let mfour = new THREE.MeshStandardMaterial( {map: back, side: THREE.DoubleSide} ); // back
 			let five = new THREE.PlaneGeometry( size,size);
-			let mfive = new THREE.MeshBasicMaterial( {map: top, side: THREE.DoubleSide} );  // top
+			let mfive = new THREE.MeshStandardMaterial( {map: top, side: THREE.DoubleSide} );  // top
 			let six = new THREE.PlaneGeometry( size,size);
 
-			let msix = new THREE.MeshBasicMaterial( {map: bottom, side: THREE.DoubleSide} );	// bottom
+			let msix = new THREE.MeshStandardMaterial( {map: bottom, side: THREE.DoubleSide} );	// bottom
 		
 			// create the meshes from the materials and gemoetriesv  
 			//////////////////////////////////////////////////////////

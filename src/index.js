@@ -1,10 +1,16 @@
-import {init, animate, doodle} from "./rubiks.js"
+import {init, animate, doodle,rotateCamera} from "./rubiks.js"
 
 
 init()
 animate();
 
-doodle();
+
+
+
+setTimeout(()=>doodle(),3000);
+
+
+
 
 
 
