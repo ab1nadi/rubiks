@@ -1,8 +1,8 @@
 import {init, animate, doodle} from './src/rubiks'
 
 
-export let init = init;
+export let init = ()=> init();
 
-export let animate = animate;
+export let animate = ()=> animate();
 
-export let doodle = doodle;
+export let doodle = ()=>doodle();
