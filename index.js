@@ -1,8 +1,8 @@
 import {init, animate, doodle} from './src/rubiks'
 
 
-export let init = ()=> init();
+export function initRubiks(domClass, givenClass) {init(domClass, givenClass)}
 
-export let animate = ()=> animate();
+export function animateRubiks() {animate()}
 
-export let doodle = ()=>doodle();
+export function doodleRubiks() {doodle()}
