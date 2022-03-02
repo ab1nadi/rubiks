@@ -14,7 +14,7 @@ let groupEverything = new THREE.Group();
 export let k = new Rubiks(0,0,0,3,15);
 
 
-export function init() {
+export function init(domElementClass, appendedClass) {
 
 
 	camera = new THREE.PerspectiveCamera( 70, window.screen.width / window.screen.height, 0.01, 1000 );
@@ -63,8 +63,9 @@ export function init() {
 
 	controls = new OrbitControls( camera, renderer.domElement );
 
-	
-	return renderer.domElement
+	let d = renderer.domElement;
+	d.classList.add(appendedClass)
+	return document.getElementByClassName(domElementClass)[0].appendChild(d);
 }
 
 
