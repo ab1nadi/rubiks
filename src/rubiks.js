@@ -11,7 +11,7 @@ let controls;
 let rubiksGroup = new THREE.Group();
 let starGroup = new THREE.Group();
 
-export let k = new Rubiks(0,0,0,3,15);
+export let k = new Rubiks(0,0,0,3,50);
 
 let pivot = new THREE.Group();
 
@@ -19,25 +19,41 @@ let pivot = new THREE.Group();
 export function init(domElementClass, appendedClass) {
 
 
-	camera = new THREE.PerspectiveCamera( 70, window.screen.width / window.screen.height, 0.01, 1000 );
-	camera.position.z = 30;
+	camera = new THREE.PerspectiveCamera( 50, window.screen.width / window.screen.height, 1, 1000 );
+	camera.position.z = 500;
 	scene = new THREE.Scene();
+	scene.add(camera);
 
 	const light = new THREE.AmbientLight( 0x404040 ); // soft white light
 	scene.add( light );
 
-	const pointLight = new THREE.PointLight( 0xffffff, 10, 100 );
-	pointLight.position.set( -50, 50, 50 );
-	scene.add( pointLight );
+	const pointLight = new THREE.PointLight( 0xffffff, 200, 700, 2);
+	pointLight.position.set( -300, 300, 500 );
 
-	// generate random stars
-	for(let i =0; i< 400; i++ )
+
+	// generate 200 outer starts
+	for(let i =0; i< 200; i++ )
 	{
-		let x_ = Math.floor(Math.random() *500)-250;
-		let y_ = Math.floor(Math.random() *500)-250;
-		let z_ = Math.floor(Math.random() *500)-250;
+		let x_ = Math.floor(Math.random() * (1000 + 1000 + 1)) -1000;
+		let y_ = Math.floor(Math.random() * (1000 +1000 + 1)) -1000;
+		let z_ = Math.floor(Math.random() * (1000 +1000 + 1)) -1000;
 
-		let geometry = new THREE.BoxGeometry( .2, .2, .2 );
+		let geometry = new THREE.BoxGeometry( 1, 1, 1 );
+		let material = new THREE.MeshBasicMaterial( {color: 0xffffff} );
+		let cube = new THREE.Mesh( geometry, material );
+
+		cube.position.set(x_,y_,z_);
+		starGroup.add(cube);
+	}
+
+	// generate 200 inner stars
+	for(let i =0; i< 200; i++ )
+	{
+		let x_ = Math.floor(Math.random() * (600 + 600 + 1)) -600;
+		let y_ = Math.floor(Math.random() * (600 + 600 + 1)) -600;
+		let z_ = Math.floor(Math.random() * (600 + 600 + 1)) -600;
+
+		let geometry = new THREE.BoxGeometry( .4, .4, .4 );
 		let material = new THREE.MeshBasicMaterial( {color: 0xffffff} );
 		let cube = new THREE.Mesh( geometry, material );
 
@@ -52,17 +68,13 @@ export function init(domElementClass, appendedClass) {
 
 
 
-	pivot.add(rubiksGroup, starGroup)
-
+	pivot.add(rubiksGroup, starGroup, pointLight)
 
 
 	scene.add(pivot)
 
 
 
-	//controls.update() must be called after any manual changes to the camera's transform
-	camera.position.set( -20, 0, 40 );
-	
 
 	renderer = new THREE.WebGLRenderer( { antialias: true } );
 	renderer.setSize( window.screen.width, window.screen.height );
@@ -92,10 +104,24 @@ export function animate()
 }
 
 
-export function setCameraPosition(x,y)
+export function setPivotPosition(x,y)
 {
-	camera.position.x = x;
-	camera.position.y = y;
+	var planeZ = new THREE.Plane(new THREE.Vector3(0,0,1), 0);
+
+	var mv = new THREE.Vector3(
+    (x / window.screen.width) * 2 - 1,
+    -(y / window.screen.height) * 2 + 1,
+    0);
+	var raycaster = new THREE.Raycaster()
+	
+	raycaster.setFromCamera( mv, camera );
+
+	var pos = new THREE.Vector3();
+		raycaster.ray.intersectPlane(planeZ, pos);
+
+console.log(pos)
+	pivot.position.x = pos.x;
+	pivot.position.y = pos.y;
 }
 
 
@@ -104,7 +130,7 @@ export function doodle()
 	let stack = [];
 
 	let map = [(e)=>k.rotateFront(e), (e)=>k.rotateBack(e),(e)=>k.rotateLeft(e),(e)=>k.rotateRight(e),(e)=>k.rotateTop(e),(e)=>k.rotateBottom(e)]
-	let numberMoves = 400;
+	let numberMoves = 200;
 
 	let last = 0;
 	// go forward
