@@ -27,7 +27,7 @@ export default class Rubiks
 		this.z = z;
 		this.col = col;
 		this.gap = 0.02;
-		this.size = 2;
+		this.size = 20; // this needed to be changed
 
 		
 
