@@ -11,7 +11,7 @@ let controls;
 let rubiksGroup = new THREE.Group();
 let starGroup = new THREE.Group();
 
-export let k = new Rubiks(0,0,0,3,50);
+export let k = new Rubiks(0,0,0,3,25);
 
 let pivot = new THREE.Group();
 
@@ -119,7 +119,6 @@ export function setPivotPosition(x,y)
 	var pos = new THREE.Vector3();
 		raycaster.ray.intersectPlane(planeZ, pos);
 
-console.log(pos)
 	pivot.position.x = pos.x;
 	pivot.position.y = pos.y;
 }
@@ -130,7 +129,7 @@ export function doodle()
 	let stack = [];
 
 	let map = [(e)=>k.rotateFront(e), (e)=>k.rotateBack(e),(e)=>k.rotateLeft(e),(e)=>k.rotateRight(e),(e)=>k.rotateTop(e),(e)=>k.rotateBottom(e)]
-	let numberMoves = 200;
+	let numberMoves = 100;
 
 	let last = 0;
 	// go forward
