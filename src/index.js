@@ -1,7 +1,7 @@
 import {init, animate, doodle,rotateCamera} from "./rubiks.js"
 
 
-init()
+init("holder")
 animate();
 
 
