@@ -14,20 +14,25 @@ let animationOffset = 3000;
 
 // get query parameters
 // if they exist
-if(params.has('top'))
+
+setTimeout(()=>
+{
+    if(params.has('top'))
     top = params.get('top');
 
-if(params.has('left'))
-    left = params.get('left');
+    if(params.has('left'))
+        left = params.get('left');
 
-if(params.has('rightpadding'))
-    rightPadding = params.get('rightpadding');
+    if(params.has('rightpadding'))
+        rightPadding = params.get('rightpadding');
 
-if(params.has('loop'))
-    loop = params.get('loop');
+    if(params.has('loop'))
+        loop = params.get('loop');
 
-if(params.has('animationOffset'))
-    animationOffset = parseInt(params.get('animationOffset'));
+    if(params.has('animationOffset'))
+        animationOffset = parseInt(params.get('animationOffset'));
+
+},30);
 
 
 // set the initial position
