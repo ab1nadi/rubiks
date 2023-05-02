@@ -84,7 +84,7 @@ export function init(domElementClass, appendedClass) {
 	renderer = new THREE.WebGLRenderer({
 		antialias: true
 	});
-	renderer.setSize(window.screen.width, window.screen.height);
+	renderer.setSize(window.screen.availWidth, window.screen.availHeight);
 
 
 	// get the render canvas
