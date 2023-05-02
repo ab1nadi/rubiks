@@ -4,7 +4,6 @@ import {init, animate, doodle, setPivotPosition} from "./rubiks.js"
 init("holder");
 animate();
 
-const params = new URLSearchParams(window.location.search)
 
 let top = window.screen.height/2;
 let left = window.screen.width/2;
@@ -17,6 +16,9 @@ let currentPosition = left;
 // if they exist
 
 window.addEventListener("load", (event) => {
+
+    const params = new URLSearchParams(window.location.search)
+
     if(params.has('top'))
     top = params.get('top');
 
