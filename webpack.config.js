@@ -6,6 +6,7 @@ module.exports = {
   output: 
   {
     filename: "app.js",
+    publicPath: '',
     path: path.resolve(__dirname, 'docs'),
   },
   devServer: {
