@@ -6,8 +6,8 @@ animate();
 
 const params = new URLSearchParams(window.location.search)
 
-let top = window.innerHeight/2;
-let left = window.innerWidth/2;
+let top = window.screen.availHeight/2;
+let left = window.screen.availWidth/2;
 let rightPadding = false;
 let loop = false;
 let animationOffset = 3000;
