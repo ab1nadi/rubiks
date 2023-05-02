@@ -21,7 +21,7 @@ let pivot = new THREE.Group();
 export function init(domElementClass, appendedClass) {
 
 	// create the camera
-	camera = new THREE.PerspectiveCamera(45, window.screen.width / window.screen.height, 1, 1000);
+	camera = new THREE.PerspectiveCamera(45, window.screen.availWidth / window.screen.availHeight, 1, 1000);
 	camera.position.z = 500;
 	scene = new THREE.Scene();
 	scene.add(camera);
