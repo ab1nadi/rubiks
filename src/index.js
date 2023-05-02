@@ -16,8 +16,7 @@ let currentPosition = left;
 // get query parameters
 // if they exist
 
-setTimeout(()=>
-{
+window.addEventListener("load", (event) => {
     if(params.has('top'))
     top = params.get('top');
 
@@ -44,7 +43,8 @@ setTimeout(()=>
 
     runDoodle();
 
-},30);
+
+});
 
 
 
@@ -53,7 +53,6 @@ setTimeout(()=>
 window.addEventListener("resize", (e) =>{
     updatePosition();
 });
-
 
 
 
@@ -81,7 +80,7 @@ function updatePosition()
 {
     if(!rightPadding)
         return;
-        
+
     if(window.innerWidth <(parseInt(left)+parseInt(rightPadding)))
        {
             currentPosition = parseInt(window.innerWidth)-parseInt(rightPadding);
