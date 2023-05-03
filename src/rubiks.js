@@ -20,6 +20,8 @@ let pivot = new THREE.Group();
 // and creates the rubiks cube
 export function init(domElementClass, appendedClass) {
 
+
+
 	// create the camera
 	camera = new THREE.PerspectiveCamera(45, window.screen.width / window.screen.height, 1, 1000);
 	camera.position.z = 500;
@@ -87,16 +89,20 @@ export function init(domElementClass, appendedClass) {
 	renderer.setSize(window.screen.width, window.screen.height);
 
 
-	// get the render canvas
-	let d = renderer.domElement;
 
+	const canvas = renderer.domElement;
+
+	canvas.width= window.screen.width;
+	canvas.height=window.screen.height;
+
+	
 
 	// add whatever class the user wanted to it
-	d.classList.add(appendedClass)
+	canvas.classList.add(appendedClass)
 	
 	// append it to whatever element the user wanted
 	// and return it;
-	return document.getElementsByClassName(domElementClass)[0].appendChild(d);
+	return document.getElementsByClassName(domElementClass)[0].appendChild(canvas);
 }
 
 
