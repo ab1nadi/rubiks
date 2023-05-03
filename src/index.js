@@ -10,7 +10,7 @@ let left = window.screen.width/2;
 let rightPadding = false;
 let loop = false;
 let animationOffset = 3000;
-
+let center = false;
 let currentPosition = left;
 // get query parameters
 // if they exist
@@ -33,6 +33,8 @@ window.addEventListener("load", (event) => {
 
     if(params.has('animationOffset'))
         animationOffset = parseInt(params.get('animationOffset'));
+    if(params.has('center'))
+        center = params.get('center');
 
 
 
@@ -80,10 +82,17 @@ function runDoodle()
 // if nothing was passed it won't update the position
 function updatePosition()
 {
-    if(!rightPadding)
+    console.log(center);
+    if(center)
+    {
+        console.log("made it here")
+        currentPosition = window.innerWidth/2;
+    }
+    // in this case lets just center it
+    else if(!rightPadding)
         return;
 
-    if(window.innerWidth <(parseInt(left)+parseInt(rightPadding)))
+    else if(window.innerWidth <(parseInt(left)+parseInt(rightPadding)))
        {
             currentPosition = parseInt(window.innerWidth)-parseInt(rightPadding);
        } 
