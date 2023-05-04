@@ -64,21 +64,17 @@ window.addEventListener("load", (event) => {
 });
 
 
-setInterval(()=>
+window.addEventListener("message", (e)=>
 {
-    const params = new URLSearchParams(window.location.search)
+    if(e.data === "true")
+        setVisibility(true);
+    else 
+        setVisibility(false);
 
-    let old_visibilty = visibility;
+})
 
-    if(params.has('visibility'))
-        visibility = params.get('visibility');
 
-    if(old_visibilty != visibility)
-    {
-        setVisibility(visibility);
-    }
-    
-},20);
+
 
 
 
