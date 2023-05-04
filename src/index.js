@@ -1,17 +1,21 @@
-import {init, animate, doodle, setPivotPosition} from "./rubiks.js"
+import {init, animate, doodle, setPivotPosition, setVisibility} from "./rubiks.js"
+
+
 
 
 init("holder");
-animate();
 
 
-let top = window.innerWidth/2;
+
+
+let top = window.innerHeight/2;
 let left = window.innerWidth/2;
 let rightPadding = false;
 let loop = false;
 let animationOffset = 3000;
 let center = false;
 let currentPosition = left;
+let visibility = false;
 // get query parameters
 // if they exist
 
@@ -33,8 +37,17 @@ window.addEventListener("load", (event) => {
 
     if(params.has('animationOffset'))
         animationOffset = parseInt(params.get('animationOffset'));
+
     if(params.has('center'))
         center = params.get('center');
+
+    if(params.has('visibility'))
+        visibility = params.get('visibility');
+    
+
+    setVisibility(visibility);
+    
+    animate();
 
 
 
@@ -42,6 +55,7 @@ window.addEventListener("load", (event) => {
     setPivotPosition(parseInt(left), parseInt(top));
 
     currentPosition = parseInt(left);
+
 
     updatePosition();
 

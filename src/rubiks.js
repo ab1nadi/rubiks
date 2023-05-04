@@ -15,10 +15,15 @@ export let k = new Rubiks(0, 0, 0, 3, 25);
 let pivot = new THREE.Group();
 
 
+export function setVisibility(v)
+{
+	rubiksGroup.visible=v;
+}	
+
 
 // sets up the scene
 // and creates the rubiks cube
-export function init(domElementClass, appendedClass) {
+export function init(domElementClass, appendedClass,) {
 
 
 
@@ -36,29 +41,15 @@ export function init(domElementClass, appendedClass) {
 	const pointLight = new THREE.PointLight(0xffffff, 200, 700, 2);
 	pointLight.position.set(-300, 300, 500);
 
-	// generate 200 outer starts
-	for (let i = 0; i < 200; i++) {
-		let x_ = Math.floor(Math.random() * (1000 + 1000 + 1)) - 1000;
-		let y_ = Math.floor(Math.random() * (1000 + 1000 + 1)) - 1000;
-		let z_ = Math.floor(Math.random() * (1000 + 1000 + 1)) - 1000;
 
-		let geometry = new THREE.BoxGeometry(1, 1, 1);
-		let material = new THREE.MeshBasicMaterial({
-			color: 0xffffff
-		});
-		let cube = new THREE.Mesh(geometry, material);
-
-		cube.position.set(x_, y_, z_);
-		starGroup.add(cube);
-	}
 
 	// generate 200 inner stars
-	for (let i = 0; i < 200; i++) {
-		let x_ = Math.floor(Math.random() * (600 + 600 + 1)) - 600;
-		let y_ = Math.floor(Math.random() * (600 + 600 + 1)) - 600;
-		let z_ = Math.floor(Math.random() * (600 + 600 + 1)) - 600;
+	for (let i = 0; i < 300; i++) {
+		let x_ = Math.floor(Math.random() * (500 + 500 + 1)) - 500;
+		let y_ = Math.floor(Math.random() * (500 + 500 + 1)) - 500;
+		let z_ = Math.floor(Math.random() * (500 + 500 + 1)) - 500;
 
-		let geometry = new THREE.BoxGeometry(.4, .4, .4);
+		let geometry = Math.random() > 5 ? new THREE.BoxGeometry(.5, .5, .5) : new THREE.BoxGeometry(2, 2, 2);
 		let material = new THREE.MeshBasicMaterial({
 			color: 0xffffff
 		});
