@@ -61,8 +61,24 @@ window.addEventListener("load", (event) => {
 
     runDoodle();
 
-
 });
+
+
+setInterval(()=>
+{
+    const params = new URLSearchParams(window.location.search)
+
+    let old_visibilty = visibility;
+
+    if(params.has('visibility'))
+        visibility = params.get('visibility');
+
+    if(old_visibilty != visibility)
+    {
+        setVisibility(visibility);
+    }
+    
+},20);
 
 
 
