@@ -17,7 +17,10 @@ let pivot = new THREE.Group();
 
 export function setVisibility(v)
 {
-	rubiksGroup.visible=v;
+	if(v === "true")
+		rubiksGroup.visible=true;
+	else 
+		rubiksGroup.visible=false;
 }	
 
 
