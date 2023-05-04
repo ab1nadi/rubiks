@@ -5,8 +5,8 @@ init("holder");
 animate();
 
 
-let top = window.screen.height/2;
-let left = window.screen.width/2;
+let top = window.innerWidth/2;
+let left = window.innerWidth/2;
 let rightPadding = false;
 let loop = false;
 let animationOffset = 3000;
@@ -82,10 +82,8 @@ function runDoodle()
 // if nothing was passed it won't update the position
 function updatePosition()
 {
-    console.log(center);
     if(center)
     {
-        console.log("made it here")
         currentPosition = window.innerWidth/2;
     }
     // in this case lets just center it
