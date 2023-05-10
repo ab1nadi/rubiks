@@ -15,7 +15,7 @@ let loop = false;
 let animationOffset = 3000;
 let center = false;
 let currentPosition = left;
-let visibility = false;
+let visibility = true;
 // get query parameters
 // if they exist
 
