@@ -47,7 +47,7 @@ export function init(domElementClass, appendedClass,) {
 
 
 	// generate 200 inner stars
-	for (let i = 0; i < 300; i++) {
+	for (let i = 0; i < 100; i++) {
 		let x_ = Math.floor(Math.random() * (500 + 500 + 1)) - 500;
 		let y_ = Math.floor(Math.random() * (500 + 500 + 1)) - 500;
 		let z_ = Math.floor(Math.random() * (500 + 500 + 1)) - 500;
