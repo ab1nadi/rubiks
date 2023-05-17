@@ -1,20 +1,27 @@
-import * as THREE from 'three';
+/*
+This file just houses some exported functions
+for managing the rubiks cube.
+*/
 
+import * as THREE from 'three';
 import Rubiks from './rubiks_obj'
 
-
+// some things that need to be initialized
 let camera, scene, renderer
-
-
-
 let rubiksGroup = new THREE.Group();
 let starGroup = new THREE.Group();
-
-export let k = new Rubiks(0, 0, 0, 3, 25);
-
 let pivot = new THREE.Group();
 
 
+// the rubiks cube
+export let k = new Rubiks(0, 0, 0, 3, 25);
+
+
+
+
+// setVisibility
+// sets the visibility 
+// of the rubiks cube
 export function setVisibility(v)
 {
 	if(v === true)
@@ -23,11 +30,10 @@ export function setVisibility(v)
 		rubiksGroup.visible=false;
 }	
 
-
+// init
 // sets up the scene
 // and creates the rubiks cube
 export function init(domElementClass, appendedClass,) {
-
 
 
 	// create the camera
@@ -43,8 +49,6 @@ export function init(domElementClass, appendedClass,) {
 	// create a point light
 	const pointLight = new THREE.PointLight(0xffffff, 200, 700, 2);
 	pointLight.position.set(-300, 300, 500);
-
-
 
 	// generate 200 inner stars
 	for (let i = 0; i < 300; i++) {
@@ -74,22 +78,15 @@ export function init(domElementClass, appendedClass,) {
 	// add the pivot to the scene
 	scene.add(pivot)
 
-
-
 	// create the renderer
 	renderer = new THREE.WebGLRenderer({
 		antialias: true
 	});
 	renderer.setSize(window.screen.width, window.screen.height);
 
-
-
 	const canvas = renderer.domElement;
-
 	canvas.width= window.screen.width;
 	canvas.height=window.screen.height;
-
-	
 
 	// add whatever class the user wanted to it
 	canvas.classList.add(appendedClass)
@@ -101,6 +98,7 @@ export function init(domElementClass, appendedClass,) {
 
 
 
+// animate
 // renders the scene
 // and does all the animations
 export function animate() {
@@ -117,7 +115,7 @@ export function animate() {
 }
 
 
-
+// setPivotPosition
 // moves the rubiks cube, the light, and all
 // the stars around the scene. in relation 
 // to x,y pixel coordinates on the screen
@@ -144,7 +142,7 @@ export function setPivotPosition(x, y) {
 	pivot.position.y = pos.y;
 }
 
-
+// doodle
 // does a mixing and solving
 // animation for the rubiks cube
 export function doodle() {

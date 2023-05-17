@@ -32,6 +32,9 @@ const redT = new THREE.TextureLoader().load(red);
 
 
 
+// class Rubiks
+// handles everything to do 
+// with a rubiks cube in three.js
 export default class Rubiks {
 	constructor(x, y, z, col, animationLength) {
 		this.x = x;
@@ -90,8 +93,6 @@ export default class Rubiks {
 	// creates and adds the rubiks 
 	// cube to the given scene
 	init(scene) {
-
-
 		this.scene = scene;
 
 
@@ -100,10 +101,6 @@ export default class Rubiks {
 		this.localx = -1 * ((this.col - 1) * this.gap + this.col * this.size) / 2 + this.size / 2;
 		this.localz = -1 * ((this.col - 1) * this.gap + (this.col) * this.size) / 2
 		this.localy = (this.col - 1) * this.gap / 2 + (this.col) * this.size / 2 - this.size / 2;
-
-
-
-
 
 		let id = 0;
 
@@ -140,8 +137,6 @@ export default class Rubiks {
 					else if (y == this.col - 1)
 						expossure.bottom = true;
 
-
-
 					// create the cube with the figured data
 					let cube = this.createCube(x_, y_, z_, this.size, expossure);
 					this.holder.add(cube);
@@ -173,7 +168,6 @@ export default class Rubiks {
 	// creates one cube with the correct 
 	// colors
 	createCube(x, y, z, size, expossure) {
-
 
 		// where we figure out the colors:
 		let front = blackT;
@@ -318,6 +312,9 @@ export default class Rubiks {
 	}
 
 
+	// rotateTop
+	// rotates the top of the rubikscube
+	// a given direction
 	rotateTop(clockwise) {
 		// means that we can animate 
 		if (this.animation == "") {
@@ -336,6 +333,9 @@ export default class Rubiks {
 		}
 	}
 
+	// rotateBottom
+	// rotates the bottom of the 
+	// rubiks cube a given direction
 	rotateBottom(clockwise) {
 
 		// means that we can animate 
@@ -355,6 +355,9 @@ export default class Rubiks {
 		}
 	}
 
+	// rotateLeft
+	// rotates the left of a rubiks cube a given
+	// direction
 	rotateLeft(clockwise) {
 		// means that we can animate 
 		if (this.animation == "") {
@@ -374,9 +377,10 @@ export default class Rubiks {
 		}
 	}
 
+	// rotateRight
+	// rotates the right of a rubiks cube a given
+	// direction
 	rotateRight(clockwise) {
-
-
 		// means that we can animate 
 		if (this.animation == "") {
 
@@ -389,7 +393,6 @@ export default class Rubiks {
 			// rotate the everything holder
 			rR(this.everything, !clockwise);
 
-
 			this.animation = "x";; // this will start the animation in the update loop
 
 		} else {
@@ -398,6 +401,9 @@ export default class Rubiks {
 	}
 
 
+	// rotateBack
+	// rotates the back of a rubiks
+	// cube a given direction
 	rotateBack(clockwise) {
 		// means that we can animate 
 		if (this.animation == "") {
@@ -416,6 +422,9 @@ export default class Rubiks {
 		}
 	}
 
+	// rotateFront
+	// rotates the front of a rubiks cube a given
+	// direction
 	rotateFront(clockwise) {
 		// means that we can animate 
 		if (this.animation == "") {

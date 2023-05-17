@@ -1,5 +1,7 @@
-/// This code is tested 
+// This code is tested 
 // and works quite well 
+// basically this code can rotate a
+// 3d array on the top bottom or sides
 
 
 

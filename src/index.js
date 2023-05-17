@@ -1,13 +1,11 @@
 import {init, animate, doodle, setPivotPosition, setVisibility} from "./rubiks.js"
 
-
-
-
+// init the holder of the rubiks cube canvas
 init("holder");
 
 
-
-
+// some variables that can be
+// set by query parameters
 let top = window.innerHeight/2;
 let left = window.innerWidth/2;
 let rightPadding = false;
@@ -16,9 +14,10 @@ let animationOffset = 3000;
 let center = false;
 let currentPosition = left;
 let visibility = true;
+
+
 // get query parameters
 // if they exist
-
 window.addEventListener("load", (event) => {
 
     const params = new URLSearchParams(window.location.search)
@@ -45,47 +44,38 @@ window.addEventListener("load", (event) => {
         visibility = params.get('visibility');
     
 
+
+    // use the data and 
+    // start everthing
     setVisibility(visibility);
-    
     animate();
-
-
-
-    // set the initial position
     setPivotPosition(parseInt(left), parseInt(top));
-
     currentPosition = parseInt(left);
-
-
     updatePosition();
-
     runDoodle();
 
 });
 
 
+// sets up an event listener
+// so that a parent window (supposing this
+// rubiks cube website is in an iframe)
+// can message this rubiks cube website.
+// and set the visibility 
 window.addEventListener("message", (e)=>
 {
     if(e.data === "true")
         setVisibility(true);
     else 
         setVisibility(false);
-
 })
 
 
-
-
-
-
-
-// we want the rubiks cube to go left when we resize
+// an event listener that makes the 
+// rubiks cube go left when we resize the screen
 window.addEventListener("resize", (e) =>{
     updatePosition();
 });
-
-
-
 
 
 // runDoodle
