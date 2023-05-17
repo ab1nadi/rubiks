@@ -18,6 +18,17 @@ let visibility = true;
 
 // get query parameters
 // if they exist
+
+
+window.addEventListener("message", (e)=>
+{
+    if(e.data === "true")
+        setVisibility(true);
+    else 
+        setVisibility(false);
+
+})
+
 window.addEventListener("load", (event) => {
 
     const params = new URLSearchParams(window.location.search)
